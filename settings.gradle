@@ -1,0 +1,2 @@
+rootProject.name = "motivator"
+include ':app'
