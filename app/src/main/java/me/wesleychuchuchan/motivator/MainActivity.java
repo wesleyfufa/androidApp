@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-    //intiate
+    //init
     private void initViews(){
         msg = (TextView) findViewById(R.id.msg);
         msgBtn = (Button) findViewById(R.id.msgBtn);
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY,11);
-        calendar.set(Calendar.MINUTE,30);
+        calendar.set(Calendar.MINUTE,52);
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
 //        long timeAtButtonClick = System.currentTimeMillis();
