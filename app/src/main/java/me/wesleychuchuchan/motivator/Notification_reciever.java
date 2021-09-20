@@ -17,7 +17,7 @@ public class Notification_reciever extends BroadcastReceiver {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"notifyUser")
                 .setSmallIcon(R.drawable.ic_launcher_background)
-                .setContentTitle("Remid Lemubit academy")
+                .setContentTitle("Your Daily Quote")
                 .setContentText("Hey Students, this is a soft reminder")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 

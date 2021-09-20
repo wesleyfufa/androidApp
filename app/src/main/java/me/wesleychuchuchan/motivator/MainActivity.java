@@ -46,10 +46,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initViews();
-        createNotificationChannel();
 
-        //Daliy notification
-        //ERROR have to have API 25 and lower
+        createNotificationChannel();
+        setNotification();
+
 //        getNotification();
 
         //Display quote
@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                msg.setText(shuffleMSG());
-                setNotification();
                 Cursor res = DB.getQuotes();
                 if(res.getCount()>0){
                     res.moveToFirst();
@@ -97,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void setNotification(){
-        Toast.makeText(this,"Remider set!", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(MainActivity.this, Notification_reciever.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0,intent,0);
@@ -105,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY,7);
+        calendar.set(Calendar.HOUR_OF_DAY,11);
         calendar.set(Calendar.MINUTE,30);
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
