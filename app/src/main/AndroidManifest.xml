@@ -7,13 +7,13 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="Daily Insult"
+        android:label="myMotivator"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Motivator">
 
-        <activity android:name=".Repeating_activity"/>
-        <receiver android:name=".Notification_reciever"/>
+<!--        <activity android:name=".Repeating_activity"/>-->
+<!--        <receiver android:name=".Notification_reciever"/>-->
 
         <activity android:name=".CustomizeActivity"></activity>
 <!--        <activity-->
@@ -27,6 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver android:name=".Notification_reciever"/>
     </application>
 
 </manifest>

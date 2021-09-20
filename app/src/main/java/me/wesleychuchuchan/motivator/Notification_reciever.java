@@ -8,29 +8,23 @@ import android.content.Intent;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 public class Notification_reciever extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent repeating_intent = new Intent(context,Repeating_activity.class);
-        repeating_intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"notifyUser")
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle("Remid Lemubit academy")
+                .setContentText("Hey Students, this is a soft reminder")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        PendingIntent pendingIntent= PendingIntent.getActivity(context,100,repeating_intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                .setContentIntent(pendingIntent)
-                .setSmallIcon(android.R.drawable.arrow_down_float)
-                .setContentTitle("Notification tiltle")
-                .setContentText("notificaotn text")
-                .setAutoCancel(true);
-//        notificationManager.notify(100, builder.build());
-        if(intent.getAction().equals("myNotificationMessage")){
-            notificationManager.notify(100, builder.build());
-            Log.i("Notify", "Alarm");
-        }
+        notificationManager.notify(200,builder.build());
+
     }
 }
 

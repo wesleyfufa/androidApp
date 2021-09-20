@@ -5,12 +5,16 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -26,14 +30,14 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-//    private String test[] = "human garbage", "shit face", "C***";
-
-    protected static List<String> test = new ArrayList<String>(){
+    // List of Quotes
+    /*protected static List<String> test = new ArrayList<String>(){
         {add("My gran could do better! And she’s dead!");
         add("You’re getting your knickers in a twist! Calm down!");
-        add("This is a really tough decision…’cause you’re both crap.");}};
+        add("This is a really tough decision…’cause you’re both crap.");}};*/
     private Button msgBtn, customizeBtn;
     private TextView msg;
+    protected static DBhelper DB;
 
 
     @Override
@@ -42,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initViews();
+        createNotificationChannel();
+
         //Daliy notification
         //ERROR have to have API 25 and lower
 //        getNotification();
@@ -50,7 +56,15 @@ public class MainActivity extends AppCompatActivity {
         msgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                msg.setText(shuffleMSG());
+//                msg.setText(shuffleMSG());
+                setNotification();
+                Cursor res = DB.getQuotes();
+                if(res.getCount()>0){
+                    res.moveToFirst();
+                    msg.setText(res.getString(0));
+                }else{
+                    Toast.makeText(MainActivity.this, "Add your quotes", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         //take to customize page
@@ -63,50 +77,49 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-    private void getNotification(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel channel = new NotificationChannel("myNotification", "myNotification", NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-
-        }
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY,23);
-        calendar.set(Calendar.MINUTE,20);
-        calendar.set(calendar.SECOND,2);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, "myNotification");
-         builder.setContentTitle("Notification tiltle");
-         builder.setContentText("notificaotn text");
-         builder.setSmallIcon(R.drawable.ic_launcher_background);
-         builder.setAutoCancel(true);
-
-        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(MainActivity.this);
-        managerCompat.notify(1,builder.build());
-
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY, );
-
-//        Calendar calendar = Calendar.getInstance();
-//
-//        calendar.set(Calendar.HOUR_OF_DAY,23);
-//        calendar.set(Calendar.MINUTE,20);
-//        calendar.set(calendar.SECOND,2);
-//
-//        Intent intent = new Intent(getApplicationContext(),Notification_reciever.class);
-//        intent.setAction("myNotificationMessage");
-//
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),100,intent,PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
-    }
+    //intiate
     private void initViews(){
         msg = (TextView) findViewById(R.id.msg);
         msgBtn = (Button) findViewById(R.id.msgBtn);
         customizeBtn = (Button) findViewById(R.id.customizeBtn);
+        DB = new DBhelper(this);
     }
-    public String shuffleMSG(){
+    private void createNotificationChannel(){
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+            CharSequence name = "quoteReminderChannel";
+            String description = "Channel for quote Reminder";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("notifyUser", name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+    private void setNotification(){
+        Toast.makeText(this,"Remider set!", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(MainActivity.this, Notification_reciever.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,0,intent,0);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY,7);
+        calendar.set(Calendar.MINUTE,30);
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
+//        long timeAtButtonClick = System.currentTimeMillis();
+//
+//        long tenSecondInMillis = 1000 * 10;
+//
+//        alarmManager.set(AlarmManager.RTC_WAKEUP,
+//                timeAtButtonClick+tenSecondInMillis,
+//                pendingIntent);
+
+    }
+    //shuffle list of msg
+    /*public String shuffleMSG(){
         Collections.shuffle(test);
         try{
             return test.get(0);
@@ -114,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Error List is empty");
             return ("ERROR");
         }
-    }
+    }*/
 
 }
 
