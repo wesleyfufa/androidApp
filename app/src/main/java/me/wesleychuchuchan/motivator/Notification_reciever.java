@@ -20,7 +20,7 @@ public class Notification_reciever extends BroadcastReceiver {
         if(res.getCount()>0){
             res.moveToFirst();
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"notifyUser")
-                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setSmallIcon(R.drawable.ic_love)
                     .setContentTitle("Your Daily Quote")
                     .setContentText(res.getString(0))
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT);
